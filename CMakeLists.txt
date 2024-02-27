@@ -8,4 +8,5 @@ add_executable(CompilerV1 src/main.cpp
         src/parser.h
         src/parser.h
         src/parser.h
-        src/parser.h)
+        src/parser.h
+        src/generation.h)

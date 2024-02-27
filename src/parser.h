@@ -34,18 +34,23 @@ public:
             if (peek().value().type == TokenType::exit) {
                 consume();
                 if (auto node_expr = parse_expr()) {
-                    exit_node = NodeExit { .expr = node_expr.value() };
+                    exit_node = NodeExit{.expr = node_expr.value()};
+                    if (peek().has_value() && peek().value().type == TokenType::semi) {
+                        consume();
+                        break; // Exit after successfully parsing an exit node
+                    } else {
+                        std::cerr << "Expected semicolon after expression" << std::endl;
+                        exit(EXIT_FAILURE);
+                    }
                 } else {
                     std::cerr << "Invalid expression" << std::endl;
                     exit(EXIT_FAILURE);
                 }
-                if (!peek().has_value() || peek().value().type != TokenType::semi) {
-                    std::cerr << "Invalid expression" << std::endl;
-                    exit(EXIT_FAILURE);
-                }
+            } else {
+                consume(); // Ensure progress if not an exit token
             }
         }
-        m_index = 0;
+        // Removed m_index = 0;
         return exit_node;
     }
 
